@@ -16,11 +16,11 @@
 - [x] Copy contract ABIs into frontend/abi/ — ERC6538.json and ERC5564.json
 
 ## Phase 3 — Stealth crypto layer
-- [ ] Write generateStealthAddress(recipientMetaAddress) helper
-- [ ] Write computeStealthPrivKey(ephemeralPubKey, viewTag, spendingKey) helper
-- [ ] Write scanAnnouncements(logs, spendKey) — filters announcer logs
-- [ ] Unit test all 3 helpers in isolation
-- [ ] Confirm round-trip: generate → announce → scan → derive key → check balance
+- [x] Write generateStealthAddress(recipientMetaAddress) helper
+- [x] Write computeStealthPrivKey(ephemeralPubKey, viewTag, spendingKey) helper
+- [x] Write scanAnnouncements(logs, spendKey) — filters announcer logs
+- [x] Unit test all 3 helpers in isolation
+- [ ] Confirm round-trip: generate → announce → scan → derive key → check balance (needs on-chain tx)
 
 ## Phase 4 — Register flow
 - [ ] Build /register page — wallet connect, generate stealth meta-address

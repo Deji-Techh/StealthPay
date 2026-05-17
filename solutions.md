@@ -21,4 +21,12 @@ Record of what broke and how it was fixed.
 - ERC-6538 Registry: `0x6538E6bf4B0eBd30A8Ea093027Ac2422ce5d6538`
 **Root cause:** ScopeLift deployed these via CREATE2 using a deterministic deployer. No custom deployment needed for Phase 2.
 
+## 2026-05-17 @scopelift/stealth-address-sdk has heavy transitive dependencies (graphql)
+**Problem:** SDK depends on `graphql-request` which requires `graphql` — npm install keeps timing out, preventing full dependency tree installation. Running `tsx` test scripts fails with "Cannot find module 'graphql'".
+**Fix:** 
+1. Downloaded `graphql` tarball directly via `npm pack` from Chinese mirror (npmmirror.com)
+2. Imported crypto functions directly from SDK sub-paths (`dist/utils/crypto`, `dist/utils/helpers`) to avoid loading the subgraph client which pulls in graphql
+3. Round-trip test passes: generate → check → compute all verified
+**Root cause:** The SDK bundles a subgraph-based announcement scanner (graphql) even when you only need the crypto functions. Direct sub-path imports bypass this.
+
 
