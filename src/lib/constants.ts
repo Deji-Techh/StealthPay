@@ -1,3 +1,6 @@
+import { keccak256, toBytes, encodeEventTopics, encodeFunctionData, parseAbiItem, formatUnits } from 'viem';
+import type { Hex, Address } from 'viem';
+
 export type NetworkConfig = {
   name: string;
   chainId: number;
@@ -30,10 +33,10 @@ export const NETWORKS = {
 } as const satisfies Record<string, NetworkConfig>;
 
 export const SCHEME_ID = 1;
-
 export const BLOCK_SCAN_LIMIT = 10_000;
-
 export const USDC_DECIMALS = 6;
+
+export const ANNOUNCEMENT_EVENT_SIGNATURE = keccak256(toBytes('Announcement(uint256,address,address,bytes,bytes)'));
 
 export const ANNOUNCER_ABI = [
   {
@@ -111,3 +114,76 @@ export const ERC20_ABI = [
     type: "function",
   },
 ] as const;
+
+export function encodeRegisterKeys(schemeId: number, metaAddress: Hex): Hex {
+  return encodeFunctionData({
+    abi: REGISTRY_ABI,
+    functionName: 'registerKeys',
+    args: [BigInt(schemeId), metaAddress],
+  });
+}
+
+export function encodeUSDCTransfer(to: Address, amount: bigint): Hex {
+  return encodeFunctionData({
+    abi: ERC20_ABI,
+    functionName: 'transfer',
+    args: [to, amount],
+  });
+}
+
+export function encodeAnnounce(
+  schemeId: number,
+  stealthAddress: Address,
+  ephemeralPubKey: Hex,
+  metadata: Hex
+): Hex {
+  return encodeFunctionData({
+    abi: ANNOUNCER_ABI,
+    functionName: 'announce',
+    args: [BigInt(schemeId), stealthAddress, ephemeralPubKey, metadata],
+  });
+}
+
+export function parseAnnouncementLog(log: {
+  topics: Hex[];
+  data: Hex;
+  transactionHash: Hex;
+}): {
+  schemeId: bigint;
+  stealthAddress: Address;
+  caller: Address;
+  ephemeralPubKey: Hex;
+  metadata: Hex;
+  txHash: Hex;
+} {
+  const schemeId = BigInt(log.topics[1]);
+
+  const stealthAddressHex = log.topics[2].slice(-40);
+  const stealthAddress = `0x${stealthAddressHex}` as Address;
+
+  const callerHex = log.topics[3].slice(-40);
+  const caller = `0x${callerHex}` as Address;
+
+  // Parse dynamic bytes from data
+  // data layout: 32 bytes (ephemeralPubKey offset), 32 bytes (metadata offset), then data
+  const dataBytes = log.data.slice(2);
+  const ephemeralOffset = parseInt(dataBytes.slice(0, 64), 16);
+  const metadataOffset = parseInt(dataBytes.slice(64, 128), 16);
+
+  // ephemeralPubKey at offset: first 32 bytes = length, rest = data
+  const ephemeralLength = parseInt(dataBytes.slice(ephemeralOffset * 2, ephemeralOffset * 2 + 64), 16);
+  const ephemeralPubKey = `0x${dataBytes.slice(ephemeralOffset * 2 + 64, ephemeralOffset * 2 + 64 + ephemeralLength * 2)}` as Hex;
+
+  // metadata at offset
+  const metadataLength = parseInt(dataBytes.slice(metadataOffset * 2, metadataOffset * 2 + 64), 16);
+  const metadata = `0x${dataBytes.slice(metadataOffset * 2 + 64, metadataOffset * 2 + 64 + metadataLength * 2)}` as Hex;
+
+  return {
+    schemeId,
+    stealthAddress,
+    caller,
+    ephemeralPubKey,
+    metadata,
+    txHash: log.transactionHash,
+  };
+}

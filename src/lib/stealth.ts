@@ -5,10 +5,11 @@ import {
   generateKeysFromSignature,
   generateStealthMetaAddressFromKeys,
   parseKeysFromStealthMetaAddress,
+  generateRandomStealthMetaAddress,
   ERC5564_CONTRACT_ADDRESS,
-  type HexString,
 } from "@scopelift/stealth-address-sdk";
 import { VALID_SCHEME_ID } from "@scopelift/stealth-address-sdk/dist/utils/crypto/types";
+import type { HexString } from "@scopelift/stealth-address-sdk/dist/utils/crypto/types";
 import {
   type Hex,
   type Address,
@@ -41,6 +42,7 @@ export type AnnouncementLog = {
   caller: Address;
   ephemeralPubKey: Hex;
   metadata: Hex;
+  txHash: Hex;
 };
 
 export type MatchedAnnouncement = AnnouncementLog & {
@@ -68,12 +70,29 @@ export function buildStealthMetaAddressURI(
 export function deriveKeysFromSignature(
   signature: Hex
 ): StealthKeyPair {
-  const keys = generateKeysFromSignature({ signature });
+  const keys = generateKeysFromSignature(signature as unknown as HexString);
   return {
     spendingPrivateKey: keys.spendingPrivateKey as Hex,
     viewingPrivateKey: keys.viewingPrivateKey as Hex,
     spendingPublicKey: keys.spendingPublicKey as Hex,
     viewingPublicKey: keys.viewingPublicKey as Hex,
+  };
+}
+
+export function generateRandomKeys(): StealthKeyPair & { metaAddress: Hex } {
+  const randomKeys = generateRandomStealthMetaAddress();
+
+  const metaAddressBytes = generateStealthMetaAddressFromKeys({
+    spendingPublicKey: randomKeys.spendingPublicKey as unknown as HexString,
+    viewingPublicKey: randomKeys.viewingPublicKey as unknown as HexString,
+  });
+
+  return {
+    spendingPrivateKey: randomKeys.spendingPrivateKey as Hex,
+    viewingPrivateKey: randomKeys.viewingPrivateKey as Hex,
+    spendingPublicKey: randomKeys.spendingPublicKey as Hex,
+    viewingPublicKey: randomKeys.viewingPublicKey as Hex,
+    metaAddress: metaAddressBytes as Hex,
   };
 }
 
@@ -84,7 +103,6 @@ export function createStealthMetaAddress(
   const metaAddressBytes = generateStealthMetaAddressFromKeys({
     spendingPublicKey: spendingPublicKey as unknown as HexString,
     viewingPublicKey: viewingPublicKey as unknown as HexString,
-    schemeId: VALID_SCHEME_ID.SCHEME_ID_1,
   });
 
   return {
@@ -126,7 +144,7 @@ export function computeStealthKeyFromAnnouncement(
   return result as Hex;
 }
 
-export function checkStealthAddress(params: {
+export function checkStealthAddressMatch(params: {
   ephemeralPublicKey: Hex;
   spendingPublicKey: Hex;
   userStealthAddress: Address;

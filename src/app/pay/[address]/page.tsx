@@ -6,7 +6,7 @@ import { GlassCard } from '@/components/GlassCard';
 import { ChromeButton } from '@/components/ChromeButton';
 import { KeyDisplay } from '@/components/KeyDisplay';
 import { generateStealthAddressFromMeta } from '@/lib/stealth';
-import { NETWORKS, ERC20_ABI, USDC_DECIMALS, SCHEME_ID } from '@/lib/constants';
+import { NETWORKS, USDC_DECIMALS, SCHEME_ID, encodeUSDCTransfer, encodeAnnounce } from '@/lib/constants';
 import type { Hex, Address } from 'viem';
 
 type Step = 'input' | 'confirm' | 'sending' | 'success';
@@ -117,51 +117,25 @@ export default function PayPage({ params }: PayPageProps) {
 
       const amountWei = BigInt(Math.round(parseFloat(amount) * 10 ** USDC_DECIMALS));
 
-      // Encode USDC transfer
-      const paddedAddress = stealthData.stealthAddress.slice(2).padStart(64, '0');
-      const paddedAmount = amountWei.toString(16).padStart(64, '0');
-      const transferData = `0xa9059cbb${paddedAddress}${paddedAmount}`;
-
       // 1. Transfer USDC
       await window.ethereum.request({
         method: 'eth_sendTransaction',
         params: [{
           from: walletAddress,
           to: network.usdc,
-          data: transferData,
+          data: encodeUSDCTransfer(stealthData.stealthAddress, amountWei),
         }],
       });
 
       await new Promise(resolve => setTimeout(resolve, 2000));
 
       // 2. Announce
-      const ephemeralKeyBytes = stealthData.ephemeralPublicKey.slice(2);
-      const ephemeralLength = (ephemeralKeyBytes.length / 2).toString(16).padStart(64, '0');
-      const ephemeralPadded = ephemeralKeyBytes.padEnd(Math.ceil(ephemeralKeyBytes.length / 64) * 64, '0');
-
-      const viewTagBytes = stealthData.viewTag.slice(2);
-      const metadataLength = (viewTagBytes.length / 2).toString(16).padStart(64, '0');
-      const metadataPadded = viewTagBytes.padEnd(64, '0');
-
-      const ephemeralOffset = 3 * 32 + 32;
-      const metadataOffset = ephemeralOffset + 1 + Math.ceil(ephemeralKeyBytes.length / 32) * 32;
-
-      const announceData = `0x0b44babf${
-        SCHEME_ID.toString(16).padStart(64, '0')
-      }${
-        stealthData.stealthAddress.slice(2).padStart(64, '0')
-      }${
-        ephemeralOffset.toString(16).padStart(64, '0')
-      }${
-        metadataOffset.toString(16).padStart(64, '0')
-      }${ephemeralLength}${ephemeralPadded}${metadataLength}${metadataPadded}`;
-
       const announceTxHash = await window.ethereum.request({
         method: 'eth_sendTransaction',
         params: [{
           from: walletAddress,
           to: network.announcer,
-          data: announceData,
+          data: encodeAnnounce(SCHEME_ID, stealthData.stealthAddress, stealthData.ephemeralPublicKey, stealthData.viewTag),
         }],
       });
 

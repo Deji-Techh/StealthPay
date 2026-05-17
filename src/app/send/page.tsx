@@ -6,8 +6,9 @@ import { GlassCard } from '@/components/GlassCard';
 import { ChromeButton } from '@/components/ChromeButton';
 import { KeyDisplay } from '@/components/KeyDisplay';
 import { generateStealthAddressFromMeta } from '@/lib/stealth';
-import { NETWORKS, ERC20_ABI, ANNOUNCER_ABI, USDC_DECIMALS, SCHEME_ID } from '@/lib/constants';
+import { NETWORKS, USDC_DECIMALS, SCHEME_ID, encodeUSDCTransfer, encodeAnnounce, REGISTRY_ABI } from '@/lib/constants';
 import type { Hex, Address } from 'viem';
+import { encodeFunctionData } from 'viem';
 
 type Step = 'input' | 'confirm' | 'sending' | 'success';
 
@@ -144,7 +145,11 @@ export default function SendPage() {
         method: 'eth_call',
         params: [{
           to: network.registry,
-          data: encodeStealthMetaAddressLookup(recipientAddress as Address),
+          data: encodeFunctionData({
+            abi: REGISTRY_ABI,
+            functionName: 'stealthMetaAddress',
+            args: [recipientAddress as Address, BigInt(SCHEME_ID)],
+          }),
         }, 'latest'],
       });
 
@@ -188,7 +193,7 @@ export default function SendPage() {
         params: [{
           from: walletAddress,
           to: network.usdc,
-          data: encodeERC20Transfer(stealthData.stealthAddress, amountWei),
+          data: encodeUSDCTransfer(stealthData.stealthAddress, amountWei),
         }],
       });
 
@@ -518,41 +523,4 @@ export default function SendPage() {
   );
 }
 
-function encodeStealthMetaAddressLookup(address: Address): string {
-  const funcSelector = '3e2e5b12'; // stealthMetaAddress(address,uint256)
-  const paddedAddress = address.slice(2).padStart(64, '0');
-  const schemeId = '0000000000000000000000000000000000000000000000000000000000000001';
-  return `0x${funcSelector}${paddedAddress}${schemeId}`;
-}
 
-function encodeERC20Transfer(to: Address, amount: bigint): string {
-  const funcSelector = 'a9059cbb'; // transfer(address,uint256)
-  const paddedAddress = to.slice(2).padStart(64, '0');
-  const paddedAmount = amount.toString(16).padStart(64, '0');
-  return `0x${funcSelector}${paddedAddress}${paddedAmount}`;
-}
-
-function encodeAnnounce(
-  schemeId: number,
-  stealthAddress: Address,
-  ephemeralPubKey: Hex,
-  viewTag: Hex
-): string {
-  const funcSelector = '0b44babf'; // announce(uint256,address,bytes,bytes)
-
-  const paddedSchemeId = schemeId.toString(16).padStart(64, '0');
-
-  const stealthAddrPadded = stealthAddress.slice(2).padStart(64, '0');
-
-  const ephemeralOffset = 3 * 32 + 32;
-  const ephemeralKeyBytes = ephemeralPubKey.slice(2);
-  const ephemeralLength = (ephemeralKeyBytes.length / 2).toString(16).padStart(64, '0');
-  const ephemeralPadded = ephemeralKeyBytes.padEnd(Math.ceil(ephemeralKeyBytes.length / 64) * 64, '0');
-
-  const metadataOffset = ephemeralOffset + 1 + Math.ceil(ephemeralKeyBytes.length / 32) * 32;
-  const metadataBytes = viewTag.slice(2);
-  const metadataLength = (metadataBytes.length / 2).toString(16).padStart(64, '0');
-  const metadataPadded = metadataBytes.padEnd(64, '0');
-
-  return `0x${funcSelector}${paddedSchemeId}${stealthAddrPadded}${ephemeralOffset.toString(16).padStart(64, '0')}${metadataOffset.toString(16).padStart(64, '0')}${ephemeralLength}${ephemeralPadded}${metadataLength}${metadataPadded}`;
-}

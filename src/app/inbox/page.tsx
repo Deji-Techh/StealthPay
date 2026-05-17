@@ -6,10 +6,9 @@ import { GlassCard } from '@/components/GlassCard';
 import { ChromeButton } from '@/components/ChromeButton';
 import { KeyDisplay } from '@/components/KeyDisplay';
 import { scanAnnouncements } from '@/lib/stealth';
-import { NETWORKS, ANNOUNCER_ABI, ERC20_ABI, BLOCK_SCAN_LIMIT, USDC_DECIMALS, SCHEME_ID } from '@/lib/constants';
+import { NETWORKS, ANNOUNCEMENT_EVENT_SIGNATURE, BLOCK_SCAN_LIMIT, USDC_DECIMALS, parseAnnouncementLog } from '@/lib/constants';
+import { loadStoredKeys, type StoredKeys } from '@/lib/storage';
 import type { Hex, Address } from 'viem';
-import { generateRandomStealthMetaAddress } from '@scopelift/stealth-address-sdk/dist/utils/helpers';
-import { VALID_SCHEME_ID } from '@scopelift/stealth-address-sdk/dist/utils/crypto/types';
 
 declare global {
   interface Window {
@@ -95,8 +94,15 @@ export default function InboxPage() {
     }
   }, []);
 
+  const [storedKeys, setStoredKeys] = useState<StoredKeys | null>(null);
+
+  useEffect(() => {
+    const keys = loadStoredKeys(chainId);
+    setStoredKeys(keys);
+  }, [chainId]);
+
   const scanChain = useCallback(async () => {
-    if (!walletConnected) return;
+    if (!walletConnected || !storedKeys) return;
     setIsScanning(true);
     setScanning(true);
     setError(null);
@@ -107,23 +113,19 @@ export default function InboxPage() {
         throw new Error('No wallet detected');
       }
 
-      // Get current block
       const blockNumberHex = await window.ethereum.request({
         method: 'eth_blockNumber',
       }) as string;
       const currentBlock = parseInt(blockNumberHex, 16);
       const fromBlock = currentBlock - BLOCK_SCAN_LIMIT;
 
-      // Fetch Announcement events
       const logs = await window.ethereum.request({
         method: 'eth_getLogs',
         params: [{
           address: network.announcer,
           fromBlock: `0x${fromBlock.toString(16)}`,
           toBlock: 'latest',
-          topics: [
-            '0x8592945db338a205e0d2e2b594964b79c8d7d3f7a7c3e4e8f5b5d7b1d6a9e3a1',
-          ],
+          topics: [ANNOUNCEMENT_EVENT_SIGNATURE],
         }],
       }) as any[];
 
@@ -134,39 +136,21 @@ export default function InboxPage() {
         return;
       }
 
-      // Parse announcements
-      const parsedAnnouncements = logs.map((log: any) => {
-        const data = log.data;
-        const stealthAddress = ('0x' + data.slice(2 + 64, 2 + 64 + 40)) as Address;
-        const ephemeralOffset = parseInt(data.slice(2 + 64 + 64, 2 + 64 + 64 + 64), 16);
-        const ephemeralPubKey = ('0x' + data.slice(2 + 64 + 64 + ephemeralOffset + 64)) as Hex;
-        const metadataOffset = parseInt(data.slice(2 + 64 + 64 + 64 + ephemeralOffset + 64 + 64), 16);
-        const metadata = ('0x' + data.slice(2 + 64 + 64 + metadataOffset + 64)) as Hex;
+      const parsedAnnouncements = logs
+        .filter((log: any) => log.topics && log.topics.length >= 4)
+        .map((log: any) => parseAnnouncementLog({
+          topics: log.topics,
+          data: log.data,
+          transactionHash: log.transactionHash,
+        }));
 
-        return {
-          schemeId: BigInt(parseInt(data.slice(2, 2 + 64), 16)),
-          stealthAddress,
-          caller: log.topics[3] ? ('0x' + log.topics[3].slice(26)) as Address : ('0x0000000000000000000000000000000000000000' as Address),
-          ephemeralPubKey,
-          metadata,
-          txHash: log.transactionHash,
-        };
-      });
-
-      // Generate keys from wallet for scanning
-      const testKeys = generateRandomStealthMetaAddress({
-        schemeId: VALID_SCHEME_ID.SCHEME_ID_1,
-      });
-
-      // Scan for matches
       const matched = scanAnnouncements(
         parsedAnnouncements,
-        testKeys.viewingPrivateKey as Hex,
-        testKeys.spendingPublicKey as Hex,
-        testKeys.spendingPrivateKey as Hex
+        storedKeys.viewingPrivateKey,
+        storedKeys.spendingPublicKey,
+        storedKeys.spendingPrivateKey,
       );
 
-      // Check balances for matched stealth addresses
       const paymentsWithBalances: Payment[] = await Promise.all(
         matched.map(async (m) => {
           try {
@@ -191,8 +175,8 @@ export default function InboxPage() {
               sender: m.caller,
               amount,
               stealthPrivateKey: m.stealthPrivateKey,
-              hasBalance: balance > 0n,
-              hasETH: ethBalance > 0n,
+              hasBalance: balance > BigInt(0),
+              hasETH: ethBalance > BigInt(0),
               txHash: m.txHash || '',
             };
           } catch {
@@ -218,7 +202,7 @@ export default function InboxPage() {
       setScanning(false);
       setIsScanning(false);
     }
-  }, [walletConnected, network, walletAddress]);
+  }, [walletConnected, network, storedKeys]);
 
   const withdraw = useCallback(async (payment: Payment) => {
     if (!walletAddress || !payment.hasETH) return;
@@ -310,7 +294,28 @@ export default function InboxPage() {
           </GlassCard>
         )}
 
-        {walletConnected && (
+        {walletConnected && !storedKeys && (
+          <GlassCard>
+            <div className="p-8 text-center">
+              <div className="w-16 h-16 mx-auto mb-6 rounded-xl flex items-center justify-center border border-white/10">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+              </div>
+              <h3 className="font-['Bebas_Neue'] text-xl tracking-[0.1em] text-[var(--text-secondary)] mb-2">
+                NO KEYS REGISTERED
+              </h3>
+              <p className="font-['Sora'] text-xs font-light text-[var(--text-tertiary)] mb-6 max-w-sm mx-auto">
+                You need to register a stealth meta-address first before you can receive payments.
+              </p>
+              <a href="/register">
+                <ChromeButton>Register Now</ChromeButton>
+              </a>
+            </div>
+          </GlassCard>
+        )}
+
+        {walletConnected && storedKeys && (
           <div className="space-y-6">
             {/* Scan button */}
             <GlassCard intensity="bright">
