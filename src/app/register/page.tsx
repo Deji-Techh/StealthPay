@@ -72,15 +72,24 @@ export default function RegisterPage() {
 
   const switchNetwork = useCallback(async (targetChainId: number) => {
     if (typeof window === 'undefined' || !window.ethereum) return;
+    setError(null);
     try {
       await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: `0x${targetChainId.toString(16)}` }] });
+      setChainId(targetChainId); setStep('connect'); setKeys(null); setTxHash(null);
     } catch (switchError: any) {
       if (switchError.code === 4902) {
         const tn = targetChainId === 59144 ? NETWORKS.mainnet : NETWORKS.sepolia;
-        await window.ethereum.request({ method: 'wallet_addEthereumChain', params: [{
-          chainId: `0x${targetChainId.toString(16)}`, chainName: tn.name, rpcUrls: [tn.rpcUrl],
-          nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 }, blockExplorerUrls: [tn.explorerUrl],
-        }]});
+        try {
+          await window.ethereum.request({ method: 'wallet_addEthereumChain', params: [{
+            chainId: `0x${targetChainId.toString(16)}`, chainName: tn.name, rpcUrls: [tn.rpcUrl],
+            nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 }, blockExplorerUrls: [tn.explorerUrl],
+          }]});
+          setChainId(targetChainId); setStep('connect'); setKeys(null); setTxHash(null);
+        } catch (addError: any) {
+          setError(addError.message || 'Failed to add network');
+        }
+      } else {
+        setError(switchError.message || 'Failed to switch network');
       }
     }
   }, []);
