@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { ThemeSwitcher } from './ThemeSwitcher';
 
 export function ChromeNav() {
   const [scrolled, setScrolled] = useState(false);
@@ -28,11 +29,11 @@ export function ChromeNav() {
       `}
       style={{
         background: scrolled
-          ? 'linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.8) 100%)'
+          ? `linear-gradient(180deg, var(--nav-bg-scroll) 0%, rgba(var(--bg-deep), 0.8) 100%)`
           : 'transparent',
         backdropFilter: scrolled ? 'blur(20px)' : 'none',
         WebkitBackdropFilter: scrolled ? 'blur(20px)' : 'none',
-        borderBottom: scrolled ? '1px solid rgba(255,255,255,0.04)' : '1px solid transparent',
+        borderBottom: scrolled ? `1px solid var(--nav-border)` : '1px solid transparent',
       }}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
@@ -51,12 +52,12 @@ export function ChromeNav() {
           <span
             className="
               font-['Bebas_Neue'] text-xl tracking-[0.15em]
-              text-white/90
-              group-hover:text-white
-              transition-colors duration-300
+              text-[var(--text-primary)] opacity-90
+              group-hover:opacity-100
+              transition-opacity duration-300
             "
           >
-            STEALTH<span className="text-white/40">PAY</span>
+            STEALTH<span className="opacity-40">PAY</span>
           </span>
         </a>
 
@@ -68,58 +69,64 @@ export function ChromeNav() {
               href={link.href}
               className="
                 relative font-['Sora'] text-xs font-medium tracking-wider uppercase
-                text-white/35 hover:text-white/80
+                text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]
                 transition-colors duration-300
                 py-2
               "
             >
               {link.label}
-              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-px bg-white/40 group-hover:w-full transition-all duration-300" />
+              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-px bg-[var(--text-secondary)] group-hover:w-full transition-all duration-300" />
             </a>
           ))}
         </div>
 
-        {/* Wallet button */}
-        <button
-          onClick={() => {
-            if (!walletConnected) {
-              setWalletConnected(true);
-              setAddress('0x7a2F...8b3E');
-            }
-          }}
-          className="
-            relative overflow-hidden px-6 py-2.5 rounded-xl
-            font-['Sora'] text-xs font-medium tracking-wider uppercase
-            border border-white/10
-            text-white/60 hover:text-white hover:border-white/25
-            transition-all duration-500
-            cursor-pointer
-          "
-          style={{
-            background: walletConnected
-              ? 'rgba(255,255,255,0.04)'
-              : 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)',
-          }}
-        >
-          {walletConnected ? (
-            <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/80 animate-pulse" />
-              {address}
-            </span>
-          ) : (
-            <span className="flex items-center gap-2">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <rect x="2" y="6" width="20" height="14" rx="2" />
-                <path d="M16 14h.01" />
-                <path d="M2 10h20" />
-              </svg>
-              Connect Wallet
-            </span>
-          )}
+        {/* Right side */}
+        <div className="flex items-center gap-3">
+          {/* Theme switcher */}
+          <ThemeSwitcher />
 
-          {/* Specular top edge */}
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-        </button>
+          {/* Wallet button */}
+          <button
+            onClick={() => {
+              if (!walletConnected) {
+                setWalletConnected(true);
+                setAddress('0x7a2F...8b3E');
+              }
+            }}
+            className="
+              relative overflow-hidden px-6 py-2.5 rounded-xl
+              font-['Sora'] text-xs font-medium tracking-wider uppercase
+              border border-[var(--glass-border)]
+              text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--glass-highlight)]
+              transition-all duration-500
+              cursor-pointer
+            "
+            style={{
+              background: walletConnected
+                ? 'var(--glass-bg)'
+                : 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)',
+            }}
+          >
+            {walletConnected ? (
+              <span className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/80 animate-pulse" />
+                {address}
+              </span>
+            ) : (
+              <span className="flex items-center gap-2">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <rect x="2" y="6" width="20" height="14" rx="2" />
+                  <path d="M16 14h.01" />
+                  <path d="M2 10h20" />
+                </svg>
+                Connect
+              </span>
+            )}
+
+            {/* Specular top edge */}
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+          </button>
+        </div>
       </div>
     </nav>
   );

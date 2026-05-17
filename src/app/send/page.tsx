@@ -217,7 +217,7 @@ export default function SendPage() {
 
   return (
     <div className="relative min-h-screen">
-      <div className="specular-field" />
+      <div className="specular-field opacity-[var(--specular-opacity)]" />
       <div className="chrome-orb chrome-orb-1" />
       <div className="chrome-orb chrome-orb-2" />
 
@@ -226,13 +226,13 @@ export default function SendPage() {
       <main className="relative z-10 max-w-2xl mx-auto px-6 pt-32 pb-20">
         {/* Page header */}
         <div className="text-center mb-12">
-          <span className="font-['Sora'] text-[10px] font-medium tracking-[0.3em] uppercase text-white/25">
+          <span className="font-['Sora'] text-[10px] font-medium tracking-[0.3em] uppercase text-[var(--text-dim)]">
             PRIVATE TRANSFER
           </span>
-          <h1 className="mt-4 font-['Bebas_Neue'] text-5xl md:text-6xl tracking-[0.08em] text-white/90">
+          <h1 className="mt-4 font-['Bebas_Neue'] text-5xl md:text-6xl tracking-[0.08em] text-[var(--text-primary)]">
             SEND USDC
           </h1>
-          <p className="mt-4 font-['Sora'] text-sm font-light text-white/35 max-w-md mx-auto">
+          <p className="mt-4 font-['Sora'] text-sm font-light text-[var(--text-tertiary)] max-w-md mx-auto">
             Enter the recipient's address. We'll generate a one-time stealth wallet that only they can access.
           </p>
         </div>
@@ -245,7 +245,7 @@ export default function SendPage() {
               px-4 py-2 rounded-lg font-['Sora'] text-xs tracking-wider transition-all duration-300
               ${chainId === 59141
                 ? 'bg-white/10 text-white border border-white/20'
-                : 'text-white/30 hover:text-white/50 border border-transparent'
+                : 'text-[var(--text-tertiary)] hover:text-white/50 border border-transparent'
               }
             `}
           >
@@ -257,7 +257,7 @@ export default function SendPage() {
               px-4 py-2 rounded-lg font-['Sora'] text-xs tracking-wider transition-all duration-300 flex items-center gap-2
               ${chainId === 59144
                 ? 'bg-white/10 text-white border border-white/20'
-                : 'text-white/30 hover:text-white/50 border border-transparent'
+                : 'text-[var(--text-tertiary)] hover:text-white/50 border border-transparent'
               }
             `}
           >
@@ -276,7 +276,7 @@ export default function SendPage() {
                   <path d="M2 10h20" />
                 </svg>
               </div>
-              <h3 className="font-['Bebas_Neue'] text-xl tracking-[0.1em] text-white/70 mb-2">
+              <h3 className="font-['Bebas_Neue'] text-xl tracking-[0.1em] text-[var(--text-secondary)] mb-2">
                 CONNECT WALLET TO SEND
               </h3>
               <ChromeButton onClick={connectWallet}>Connect Wallet</ChromeButton>
@@ -297,7 +297,7 @@ export default function SendPage() {
             <div className="p-8 space-y-6">
               {/* Recipient */}
               <div>
-                <label className="block font-['Sora'] text-[10px] font-medium uppercase tracking-[0.2em] text-white/30 mb-2">
+                <label className="block font-['Sora'] text-[10px] font-medium uppercase tracking-[0.2em] text-[var(--text-tertiary)] mb-2">
                   RECIPIENT ADDRESS
                 </label>
                 <input
@@ -308,7 +308,7 @@ export default function SendPage() {
                   className="
                     w-full px-4 py-3 rounded-xl
                     font-['DM_Mono'] text-sm tracking-wide
-                    text-white/80 placeholder:text-white/15
+                    text-[var(--text-primary)] placeholder:text-[var(--text-dim)]
                     bg-white/[0.03] border border-white/[0.06]
                     focus:border-white/20 focus:outline-none
                     transition-colors duration-300
@@ -318,7 +318,7 @@ export default function SendPage() {
 
               {/* Amount */}
               <div>
-                <label className="block font-['Sora'] text-[10px] font-medium uppercase tracking-[0.2em] text-white/30 mb-2">
+                <label className="block font-['Sora'] text-[10px] font-medium uppercase tracking-[0.2em] text-[var(--text-tertiary)] mb-2">
                   AMOUNT (USDC)
                 </label>
                 <div className="relative">
@@ -332,13 +332,13 @@ export default function SendPage() {
                     className="
                       w-full px-4 py-3 pr-16 rounded-xl
                       font-['DM_Mono'] text-sm tracking-wide
-                      text-white/80 placeholder:text-white/15
+                      text-[var(--text-primary)] placeholder:text-[var(--text-dim)]
                       bg-white/[0.03] border border-white/[0.06]
                       focus:border-white/20 focus:outline-none
                       transition-colors duration-300
                     "
                   />
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 font-['Sora'] text-xs text-white/30">
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 font-['Sora'] text-xs text-[var(--text-tertiary)]">
                     USDC
                   </span>
                 </div>
@@ -346,7 +346,7 @@ export default function SendPage() {
 
               {/* Network info */}
               <div className="flex items-center justify-between py-3 px-4 rounded-lg bg-white/[0.02] border border-white/[0.04]">
-                <span className="font-['Sora'] text-[10px] uppercase tracking-wider text-white/25">
+                <span className="font-['Sora'] text-[10px] uppercase tracking-wider text-[var(--text-dim)]">
                   NETWORK
                 </span>
                 <span className="font-['DM_Mono'] text-xs text-white/50 flex items-center gap-2">
@@ -371,27 +371,27 @@ export default function SendPage() {
         {walletConnected && step === 'confirm' && stealthData && (
           <GlassCard intensity="bright">
             <div className="p-8 space-y-6">
-              <h3 className="font-['Bebas_Neue'] text-xl tracking-[0.1em] text-white/70">
+              <h3 className="font-['Bebas_Neue'] text-xl tracking-[0.1em] text-[var(--text-secondary)]">
                 CONFIRM PRIVATE TRANSFER
               </h3>
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between py-3 border-b border-white/[0.04]">
-                  <span className="font-['Sora'] text-xs text-white/30">To</span>
-                  <span className="font-['DM_Mono'] text-xs text-white/60 truncate ml-4 max-w-[200px]">
+                  <span className="font-['Sora'] text-xs text-[var(--text-tertiary)]">To</span>
+                  <span className="font-['DM_Mono'] text-xs text-[var(--text-secondary)] truncate ml-4 max-w-[200px]">
                     {stealthData.stealthAddress}
                   </span>
                 </div>
                 <div className="flex items-center justify-between py-3 border-b border-white/[0.04]">
-                  <span className="font-['Sora'] text-xs text-white/30">Amount</span>
-                  <span className="font-['DM_Mono'] text-sm text-white/80">{amount} USDC</span>
+                  <span className="font-['Sora'] text-xs text-[var(--text-tertiary)]">Amount</span>
+                  <span className="font-['DM_Mono'] text-sm text-[var(--text-primary)]">{amount} USDC</span>
                 </div>
                 <div className="flex items-center justify-between py-3 border-b border-white/[0.04]">
-                  <span className="font-['Sora'] text-xs text-white/30">Network</span>
-                  <span className="font-['DM_Mono'] text-xs text-white/60">{network.name}</span>
+                  <span className="font-['Sora'] text-xs text-[var(--text-tertiary)]">Network</span>
+                  <span className="font-['DM_Mono'] text-xs text-[var(--text-secondary)]">{network.name}</span>
                 </div>
                 <div className="flex items-center justify-between py-3">
-                  <span className="font-['Sora'] text-xs text-white/30">Privacy</span>
+                  <span className="font-['Sora'] text-xs text-[var(--text-tertiary)]">Privacy</span>
                   <span className="font-['Sora'] text-xs text-emerald-400/70">Fully Private</span>
                 </div>
               </div>
@@ -403,7 +403,7 @@ export default function SendPage() {
                 <p className="font-['Sora'] text-[10px] font-medium uppercase tracking-wider text-amber-400/60 mb-1">
                   Two Transactions
                 </p>
-                <p className="font-['Sora'] text-xs font-light text-white/30 leading-relaxed">
+                <p className="font-['Sora'] text-xs font-light text-[var(--text-tertiary)] leading-relaxed">
                   This will execute two transactions: USDC transfer + announcement. You'll need to approve both in your wallet.
                 </p>
               </div>
@@ -435,10 +435,10 @@ export default function SendPage() {
                   <path d="M12 2a10 10 0 0110 10" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" fill="none" />
                 </svg>
               </div>
-              <h3 className="font-['Bebas_Neue'] text-xl tracking-[0.1em] text-white/70 mb-2">
+              <h3 className="font-['Bebas_Neue'] text-xl tracking-[0.1em] text-[var(--text-secondary)] mb-2">
                 SENDING TRANSACTION
               </h3>
-              <p className="font-['Sora'] text-xs font-light text-white/30">
+              <p className="font-['Sora'] text-xs font-light text-[var(--text-tertiary)]">
                 Please approve both transactions in your wallet...
               </p>
             </div>
@@ -460,10 +460,10 @@ export default function SendPage() {
                   <path d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="font-['Bebas_Neue'] text-xl tracking-[0.1em] text-white/70 mb-2">
+              <h3 className="font-['Bebas_Neue'] text-xl tracking-[0.1em] text-[var(--text-secondary)] mb-2">
                 PAYMENT SENT PRIVATELY
               </h3>
-              <p className="font-['Sora'] text-xs font-light text-white/30 mb-6 max-w-sm mx-auto">
+              <p className="font-['Sora'] text-xs font-light text-[var(--text-tertiary)] mb-6 max-w-sm mx-auto">
                 {amount} USDC has been sent to a one-time stealth address. Only the recipient can access these funds.
               </p>
 
@@ -480,7 +480,7 @@ export default function SendPage() {
                   className="
                     inline-flex items-center gap-2
                     font-['DM_Mono'] text-xs tracking-wider
-                    text-white/30 hover:text-white/60
+                    text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]
                     transition-colors duration-300
                     border-b border-white/10 hover:border-white/30
                     pb-0.5 mb-6

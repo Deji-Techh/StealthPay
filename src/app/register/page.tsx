@@ -166,7 +166,7 @@ export default function RegisterPage() {
 
   return (
     <div className="relative min-h-screen">
-      <div className="specular-field" />
+      <div className="specular-field opacity-[var(--specular-opacity)]" />
       <div className="chrome-orb chrome-orb-1" />
       <div className="chrome-orb chrome-orb-2" />
 
@@ -175,13 +175,13 @@ export default function RegisterPage() {
       <main className="relative z-10 max-w-3xl mx-auto px-6 pt-32 pb-20">
         {/* Page header */}
         <div className="text-center mb-12">
-          <span className="font-['Sora'] text-[10px] font-medium tracking-[0.3em] uppercase text-white/25">
+          <span className="font-['Sora'] text-[10px] font-medium tracking-[0.3em] uppercase text-[var(--text-dim)]">
             ERC-6538 REGISTRY
           </span>
-          <h1 className="mt-4 font-['Bebas_Neue'] text-5xl md:text-6xl tracking-[0.08em] text-white/90">
+          <h1 className="mt-4 font-['Bebas_Neue'] text-5xl md:text-6xl tracking-[0.08em] text-[var(--text-primary)]">
             REGISTER STEALTH ADDRESS
           </h1>
-          <p className="mt-4 font-['Sora'] text-sm font-light text-white/35 max-w-md mx-auto">
+          <p className="mt-4 font-['Sora'] text-sm font-light text-[var(--text-tertiary)] max-w-md mx-auto">
             One-time setup. Publishes your public keys so anyone can send you private payments.
           </p>
         </div>
@@ -194,7 +194,7 @@ export default function RegisterPage() {
               px-4 py-2 rounded-lg font-['Sora'] text-xs tracking-wider transition-all duration-300
               ${chainId === 59141
                 ? 'bg-white/10 text-white border border-white/20'
-                : 'text-white/30 hover:text-white/50 border border-transparent'
+                : 'text-[var(--text-tertiary)] hover:text-white/50 border border-transparent'
               }
             `}
           >
@@ -206,7 +206,7 @@ export default function RegisterPage() {
               px-4 py-2 rounded-lg font-['Sora'] text-xs tracking-wider transition-all duration-300 flex items-center gap-2
               ${chainId === 59144
                 ? 'bg-white/10 text-white border border-white/20'
-                : 'text-white/30 hover:text-white/50 border border-transparent'
+                : 'text-[var(--text-tertiary)] hover:text-white/50 border border-transparent'
               }
             `}
           >
@@ -230,8 +230,8 @@ export default function RegisterPage() {
                       i < currentStepIndex
                         ? 'bg-white text-black border-white'
                         : i === currentStepIndex
-                        ? 'border-white/40 text-white/80'
-                        : 'border-white/10 text-white/15'
+                        ? 'border-white/40 text-[var(--text-primary)]'
+                        : 'border-white/10 text-[var(--text-dim)]'
                     }
                   `}
                   style={
@@ -258,7 +258,7 @@ export default function RegisterPage() {
                 <span
                   className={`
                     absolute -bottom-6 font-['Sora'] text-[8px] tracking-[0.15em] uppercase whitespace-nowrap
-                    ${i <= currentStepIndex ? 'text-white/30' : 'text-white/10'}
+                    ${i <= currentStepIndex ? 'text-[var(--text-tertiary)]' : 'text-white/10'}
                   `}
                 >
                   {s.label}
@@ -295,10 +295,10 @@ export default function RegisterPage() {
                     <path d="M16 14h.01" />
                   </svg>
                 </div>
-                <h3 className="font-['Bebas_Neue'] text-2xl tracking-[0.1em] text-white/70 mb-3">
+                <h3 className="font-['Bebas_Neue'] text-2xl tracking-[0.1em] text-[var(--text-secondary)] mb-3">
                   CONNECT YOUR WALLET
                 </h3>
-                <p className="font-['Sora'] text-xs font-light text-white/30 mb-8 max-w-sm mx-auto">
+                <p className="font-['Sora'] text-xs font-light text-[var(--text-tertiary)] mb-8 max-w-sm mx-auto">
                   We need your wallet to sign your stealth keypair and register your meta-address on-chain.
                 </p>
                 <ChromeButton onClick={connectWallet}>
@@ -319,10 +319,10 @@ export default function RegisterPage() {
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   </svg>
                 </div>
-                <h3 className="font-['Bebas_Neue'] text-2xl tracking-[0.1em] text-white/70 mb-3">
+                <h3 className="font-['Bebas_Neue'] text-2xl tracking-[0.1em] text-[var(--text-secondary)] mb-3">
                   GENERATE STEALTH KEYS
                 </h3>
-                <p className="font-['Sora'] text-xs font-light text-white/30 mb-8 max-w-sm mx-auto">
+                <p className="font-['Sora'] text-xs font-light text-[var(--text-tertiary)] mb-8 max-w-sm mx-auto">
                   We'll generate a spending keypair and viewing keypair from a random signature. Your keys stay in memory — never stored.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -344,7 +344,7 @@ export default function RegisterPage() {
             {step === 'preview' && keys && (
               <div>
                 <div className="flex items-center justify-between mb-8">
-                  <h3 className="font-['Bebas_Neue'] text-2xl tracking-[0.1em] text-white/70">
+                  <h3 className="font-['Bebas_Neue'] text-2xl tracking-[0.1em] text-[var(--text-secondary)]">
                     YOUR STEALTH META-ADDRESS
                   </h3>
                 </div>
@@ -378,7 +378,7 @@ export default function RegisterPage() {
                         <p className="font-['Sora'] text-[10px] font-medium uppercase tracking-wider text-amber-400/60 mb-1">
                           Save Your Keys
                         </p>
-                        <p className="font-['Sora'] text-xs font-light text-white/30 leading-relaxed">
+                        <p className="font-['Sora'] text-xs font-light text-[var(--text-tertiary)] leading-relaxed">
                           Your private keys are stored only in memory. If you refresh this page, they will be lost.
                           Save them securely before registering.
                         </p>
@@ -421,10 +421,10 @@ export default function RegisterPage() {
                     </svg>
                   )}
                 </div>
-                <h3 className="font-['Bebas_Neue'] text-2xl tracking-[0.1em] text-white/70 mb-3">
+                <h3 className="font-['Bebas_Neue'] text-2xl tracking-[0.1em] text-[var(--text-secondary)] mb-3">
                   {isRegistering ? 'REGISTERING ON-CHAIN' : 'CONFIRM REGISTRATION'}
                 </h3>
-                <p className="font-['Sora'] text-xs font-light text-white/30 mb-8 max-w-sm mx-auto">
+                <p className="font-['Sora'] text-xs font-light text-[var(--text-tertiary)] mb-8 max-w-sm mx-auto">
                   {isRegistering
                     ? 'Please confirm the transaction in your wallet. This will publish your meta-address to the ERC-6538 registry.'
                     : 'This will publish your stealth meta-address to the ERC-6538 registry. Anyone can use it to send you private payments.'}
@@ -463,10 +463,10 @@ export default function RegisterPage() {
                     <path d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <h3 className="font-['Bebas_Neue'] text-2xl tracking-[0.1em] text-white/70 mb-3">
+                <h3 className="font-['Bebas_Neue'] text-2xl tracking-[0.1em] text-[var(--text-secondary)] mb-3">
                   REGISTRATION COMPLETE
                 </h3>
-                <p className="font-['Sora'] text-xs font-light text-white/30 mb-8 max-w-sm mx-auto">
+                <p className="font-['Sora'] text-xs font-light text-[var(--text-tertiary)] mb-8 max-w-sm mx-auto">
                   Your stealth meta-address is now public. Anyone can use it to send you private USDC payments on Linea.
                 </p>
 
@@ -489,7 +489,7 @@ export default function RegisterPage() {
                       className="
                         inline-flex items-center gap-2
                         font-['DM_Mono'] text-xs tracking-wider
-                        text-white/30 hover:text-white/60
+                        text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]
                         transition-colors duration-300
                         border-b border-white/10 hover:border-white/30
                         pb-0.5

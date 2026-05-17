@@ -33,7 +33,7 @@ export default function Home() {
   return (
     <div className="relative min-h-screen">
       {/* Background layers */}
-      <div className="specular-field" />
+      <div className="specular-field opacity-[var(--specular-opacity)]" />
       <div className="chrome-orb chrome-orb-1" />
       <div className="chrome-orb chrome-orb-2" />
       <div className="chrome-orb chrome-orb-3" />
@@ -54,7 +54,7 @@ export default function Home() {
           >
             <div className="flex items-center gap-3 mb-8">
               <div className="w-8 h-px bg-gradient-to-r from-transparent to-white/30" />
-              <span className="font-['Sora'] text-[10px] font-medium tracking-[0.3em] uppercase text-white/30">
+              <span className="font-['Sora'] text-[10px] font-medium tracking-[0.3em] uppercase text-[var(--text-tertiary)]">
                 ERC-5564 &middot; ERC-6538 &middot; LINEA
               </span>
               <div className="w-8 h-px bg-gradient-to-l from-transparent to-white/30" />
@@ -109,9 +109,9 @@ export default function Home() {
             style={{ transitionDelay: '600ms' }}
           >
             <p className="mt-8 text-center max-w-lg mx-auto">
-              <span className="font-['Sora'] text-sm font-light text-white/40 leading-relaxed">
+              <span className="font-['Sora'] text-sm font-light text-[var(--text-dim)] leading-relaxed">
                 Send USDC to anyone using their stealth address.{' '}
-                <span className="text-white/60">Nobody on-chain</span> can link the payment to the
+                <span className="text-[var(--text-secondary)]">Nobody on-chain</span> can link the payment to the
                 recipient. Financial privacy, finally on Linea.
               </span>
             </p>
@@ -150,7 +150,7 @@ export default function Home() {
             style={{ transitionDelay: '1200ms' }}
           >
             <div className="flex flex-col items-center gap-3">
-              <span className="font-['DM_Mono'] text-[10px] tracking-[0.3em] text-white/15 uppercase">
+              <span className="font-['DM_Mono'] text-[10px] tracking-[0.3em] text-[var(--text-dim)] uppercase">
                 Scroll
               </span>
               <div className="w-px h-12 bg-gradient-to-b from-white/20 to-transparent relative overflow-hidden">
@@ -170,10 +170,10 @@ export default function Home() {
           <div className="max-w-6xl mx-auto">
             {/* Section header */}
             <div className="text-center mb-20">
-              <span className="font-['Sora'] text-[10px] font-medium tracking-[0.3em] uppercase text-white/25">
+              <span className="font-['Sora'] text-[10px] font-medium tracking-[0.3em] uppercase text-[var(--text-dim)]">
                 THE PROTOCOL
               </span>
-              <h2 className="mt-4 font-['Bebas_Neue'] text-5xl md:text-6xl tracking-[0.08em] text-white/90">
+              <h2 className="mt-4 font-['Bebas_Neue'] text-5xl md:text-6xl tracking-[0.08em] text-[var(--text-primary)]">
                 HOW IT WORKS
               </h2>
             </div>
@@ -186,7 +186,7 @@ export default function Home() {
                     <div className="flex items-start justify-between mb-6">
                       <span
                         className="
-                          font-['DM_Mono'] text-xs text-white/15
+                          font-['DM_Mono'] text-xs text-[var(--text-dim)]
                         "
                       >
                         {step.number}
@@ -203,10 +203,10 @@ export default function Home() {
                         {i + 1}
                       </div>
                     </div>
-                    <h3 className="font-['Bebas_Neue'] text-2xl tracking-[0.1em] text-white/80 mb-3">
+                    <h3 className="font-['Bebas_Neue'] text-2xl tracking-[0.1em] text-[var(--text-primary)] mb-3">
                       {step.title}
                     </h3>
-                    <p className="font-['Sora'] text-xs font-light text-white/35 leading-relaxed">
+                    <p className="font-['Sora'] text-xs font-light text-[var(--text-tertiary)] leading-relaxed">
                       {step.desc}
                     </p>
                   </div>
@@ -223,16 +223,16 @@ export default function Home() {
               <div className="p-10 md:p-16">
                 <div className="flex items-center gap-3 mb-8">
                   <div className="w-10 h-px bg-gradient-to-r from-transparent to-white/40" />
-                  <span className="font-['Sora'] text-[10px] font-medium tracking-[0.3em] uppercase text-white/30">
+                  <span className="font-['Sora'] text-[10px] font-medium tracking-[0.3em] uppercase text-[var(--text-tertiary)]">
                     UNDER THE HOOD
                   </span>
                 </div>
 
-                <h3 className="font-['Bebas_Neue'] text-4xl md:text-5xl tracking-[0.08em] text-white/90 mb-6">
+                <h3 className="font-['Bebas_Neue'] text-4xl md:text-5xl tracking-[0.08em] text-[var(--text-primary)] mb-6">
                   ECDH KEY DERIVATION
                 </h3>
 
-                <p className="font-['Sora'] text-sm font-light text-white/40 leading-relaxed max-w-2xl mb-8">
+                <p className="font-['Sora'] text-sm font-light text-[var(--text-dim)] leading-relaxed max-w-2xl mb-8">
                   The same cryptography that powers end-to-end encrypted messaging. The sender uses your public
                   meta-address to generate a one-time wallet. Only you — with your private viewing key — can
                   derive the spending key and access the funds. The math guarantees it.
@@ -246,10 +246,10 @@ export default function Home() {
                     { label: 'Network', value: 'LINEA' },
                   ].map((item) => (
                     <div key={item.label} className="space-y-1">
-                      <span className="font-['Sora'] text-[9px] uppercase tracking-[0.2em] text-white/20">
+                      <span className="font-['Sora'] text-[9px] uppercase tracking-[0.2em] text-[var(--text-dim)]">
                         {item.label}
                       </span>
-                      <div className="font-['DM_Mono'] text-sm text-white/60">{item.value}</div>
+                      <div className="font-['DM_Mono'] text-sm text-[var(--text-secondary)]">{item.value}</div>
                     </div>
                   ))}
                 </div>
@@ -261,10 +261,10 @@ export default function Home() {
         {/* Footer */}
         <footer className="py-16 px-6 border-t border-white/[0.03]">
           <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-            <span className="font-['Bebas_Neue'] text-lg tracking-[0.15em] text-white/30">
-              STEALTH<span className="text-white/15">PAY</span>
+            <span className="font-['Bebas_Neue'] text-lg tracking-[0.15em] text-[var(--text-tertiary)]">
+              STEALTH<span className="text-[var(--text-dim)]">PAY</span>
             </span>
-            <span className="font-['DM_Mono'] text-[10px] tracking-wider text-white/15">
+            <span className="font-['DM_Mono'] text-[10px] tracking-wider text-[var(--text-dim)]">
               MIT LICENSE &middot; BUILT FOR LINEA EVM HACKATHON
             </span>
           </div>

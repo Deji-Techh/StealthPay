@@ -243,7 +243,7 @@ export default function InboxPage() {
 
   return (
     <div className="relative min-h-screen">
-      <div className="specular-field" />
+      <div className="specular-field opacity-[var(--specular-opacity)]" />
       <div className="chrome-orb chrome-orb-1" />
       <div className="chrome-orb chrome-orb-2" />
 
@@ -252,13 +252,13 @@ export default function InboxPage() {
       <main className="relative z-10 max-w-3xl mx-auto px-6 pt-32 pb-20">
         {/* Page header */}
         <div className="text-center mb-12">
-          <span className="font-['Sora'] text-[10px] font-medium tracking-[0.3em] uppercase text-white/25">
+          <span className="font-['Sora'] text-[10px] font-medium tracking-[0.3em] uppercase text-[var(--text-dim)]">
             INCOMING PAYMENTS
           </span>
-          <h1 className="mt-4 font-['Bebas_Neue'] text-5xl md:text-6xl tracking-[0.08em] text-white/90">
+          <h1 className="mt-4 font-['Bebas_Neue'] text-5xl md:text-6xl tracking-[0.08em] text-[var(--text-primary)]">
             INBOX
           </h1>
-          <p className="mt-4 font-['Sora'] text-sm font-light text-white/35 max-w-md mx-auto">
+          <p className="mt-4 font-['Sora'] text-sm font-light text-[var(--text-tertiary)] max-w-md mx-auto">
             Scan the chain for stealth payments sent to you. Only you can find and withdraw them.
           </p>
         </div>
@@ -271,7 +271,7 @@ export default function InboxPage() {
               px-4 py-2 rounded-lg font-['Sora'] text-xs tracking-wider transition-all duration-300
               ${chainId === 59141
                 ? 'bg-white/10 text-white border border-white/20'
-                : 'text-white/30 hover:text-white/50 border border-transparent'
+                : 'text-[var(--text-tertiary)] hover:text-white/50 border border-transparent'
               }
             `}
           >
@@ -283,7 +283,7 @@ export default function InboxPage() {
               px-4 py-2 rounded-lg font-['Sora'] text-xs tracking-wider transition-all duration-300 flex items-center gap-2
               ${chainId === 59144
                 ? 'bg-white/10 text-white border border-white/20'
-                : 'text-white/30 hover:text-white/50 border border-transparent'
+                : 'text-[var(--text-tertiary)] hover:text-white/50 border border-transparent'
               }
             `}
           >
@@ -302,7 +302,7 @@ export default function InboxPage() {
                   <line x1="12" y1="15" x2="12" y2="3" />
                 </svg>
               </div>
-              <h3 className="font-['Bebas_Neue'] text-xl tracking-[0.1em] text-white/70 mb-2">
+              <h3 className="font-['Bebas_Neue'] text-xl tracking-[0.1em] text-[var(--text-secondary)] mb-2">
                 CONNECT TO SCAN
               </h3>
               <ChromeButton onClick={connectWallet}>Connect Wallet</ChromeButton>
@@ -328,10 +328,10 @@ export default function InboxPage() {
                     </svg>
                   )}
                 </div>
-                <h3 className="font-['Bebas_Neue'] text-xl tracking-[0.1em] text-white/70 mb-2">
+                <h3 className="font-['Bebas_Neue'] text-xl tracking-[0.1em] text-[var(--text-secondary)] mb-2">
                   {isScanning ? 'SCANNING CHAIN' : 'SCAN FOR PAYMENTS'}
                 </h3>
-                <p className="font-['Sora'] text-xs font-light text-white/30 mb-6 max-w-sm mx-auto">
+                <p className="font-['Sora'] text-xs font-light text-[var(--text-tertiary)] mb-6 max-w-sm mx-auto">
                   {isScanning
                     ? `Checking last ${BLOCK_SCAN_LIMIT.toLocaleString()} blocks on ${network.name}...`
                     : `Search the last ${BLOCK_SCAN_LIMIT.toLocaleString()} blocks for stealth payments sent to you on ${network.name}.`}
@@ -376,10 +376,10 @@ export default function InboxPage() {
                       <line x1="12" y1="3" x2="12" y2="15" />
                     </svg>
                   </div>
-                  <h3 className="font-['Bebas_Neue'] text-xl tracking-[0.1em] text-white/30 mb-2">
+                  <h3 className="font-['Bebas_Neue'] text-xl tracking-[0.1em] text-[var(--text-tertiary)] mb-2">
                     NO PAYMENTS FOUND
                   </h3>
-                  <p className="font-['Sora'] text-xs font-light text-white/20 max-w-sm mx-auto">
+                  <p className="font-['Sora'] text-xs font-light text-[var(--text-dim)] max-w-sm mx-auto">
                     No stealth payments found in the last {BLOCK_SCAN_LIMIT.toLocaleString()} blocks on {network.name}.
                     Share your stealth meta-address to start receiving private payments.
                   </p>
@@ -393,10 +393,10 @@ export default function InboxPage() {
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <span className="font-['Bebas_Neue'] text-3xl tracking-[0.05em] text-white/90">
+                      <span className="font-['Bebas_Neue'] text-3xl tracking-[0.05em] text-[var(--text-primary)]">
                         {payment.amount}
                       </span>
-                      <span className="font-['Sora'] text-xs text-white/30 ml-2">USDC</span>
+                      <span className="font-['Sora'] text-xs text-[var(--text-tertiary)] ml-2">USDC</span>
                     </div>
                     <div className="flex items-center gap-2">
                       {!payment.hasETH && (
@@ -422,13 +422,13 @@ export default function InboxPage() {
 
                   <div className="space-y-3 mb-6">
                     <div className="flex items-center justify-between py-2 border-b border-white/[0.04]">
-                      <span className="font-['Sora'] text-[10px] uppercase tracking-wider text-white/25">From</span>
+                      <span className="font-['Sora'] text-[10px] uppercase tracking-wider text-[var(--text-dim)]">From</span>
                       <span className="font-['DM_Mono'] text-xs text-white/50 truncate ml-4 max-w-[150px]">
                         {payment.sender.slice(0, 6)}...{payment.sender.slice(-4)}
                       </span>
                     </div>
                     <div className="flex items-center justify-between py-2 border-b border-white/[0.04]">
-                      <span className="font-['Sora'] text-[10px] uppercase tracking-wider text-white/25">Stealth Address</span>
+                      <span className="font-['Sora'] text-[10px] uppercase tracking-wider text-[var(--text-dim)]">Stealth Address</span>
                       <span className="font-['DM_Mono'] text-xs text-white/50 truncate ml-4 max-w-[150px]">
                         {payment.stealthAddress.slice(0, 6)}...{payment.stealthAddress.slice(-4)}
                       </span>
@@ -443,7 +443,7 @@ export default function InboxPage() {
                       <p className="font-['Sora'] text-[10px] font-medium uppercase tracking-wider text-amber-400/60 mb-1">
                         Needs ETH for Gas
                       </p>
-                      <p className="font-['Sora'] text-xs font-light text-white/30 leading-relaxed">
+                      <p className="font-['Sora'] text-xs font-light text-[var(--text-tertiary)] leading-relaxed">
                         This stealth address has no ETH. Send a small amount of {network.name === 'Linea' ? 'ETH' : 'SepoliaETH'} to this address first, then import the private key above to withdraw.
                       </p>
                     </div>
