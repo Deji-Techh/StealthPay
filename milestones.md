@@ -8,12 +8,12 @@
 - [x] Install @scopelift/stealth-address-sdk (replaces eth-stealth-addresses — that's a Rust crate, not npm)
 
 ## Phase 2 — Smart contracts
-- [ ] Copy ERC-6538 StealthMetaAddressRegistry.sol source into contracts/ folder
-- [ ] Copy ERC-5564 Announcer.sol source into contracts/ folder
-- [ ] Write Hardhat deploy script — deploys both contracts and logs addresses
-- [ ] Run deploy to Linea Sepolia testnet — confirm both txs on Linea explorer
-- [ ] Save deployed contract addresses to constants/addresses.ts in frontend
-- [ ] Copy contract ABIs into frontend/abi/ — ERC6538.json and ERC5564.json
+- [x] Copy ERC-6538 StealthMetaAddressRegistry.sol source into contracts/ folder
+- [x] Copy ERC-5564 Announcer.sol source into contracts/ folder
+- [x] Write Hardhat deploy script — deploys both contracts and logs addresses
+- [ ] Run deploy to Linea Sepolia testnet — confirm both txs on Linea explorer (needs funded wallet)
+- [x] Save deployed contract addresses to constants/addresses.ts in frontend
+- [x] Copy contract ABIs into frontend/abi/ — ERC6538.json and ERC5564.json
 
 ## Phase 3 — Stealth crypto layer
 - [ ] Write generateStealthAddress(recipientMetaAddress) helper

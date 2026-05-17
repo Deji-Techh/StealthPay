@@ -16,10 +16,11 @@ Send USDC to anyone via their public stealth address. On-chain, the payment addr
 - ERC-5564 Announcer + ERC-6538 Registry: deploy existing contracts, zero custom Solidity
 - Stealth keypair persisted in sessionStorage (memory only, cleared on tab close)
 
-## Contract Addresses (update after deployment)
-- ERC-6538 Registry: TBD
-- ERC-5564 Announcer: TBD
-- USDC (Linea Sepolia): TBD
+## Contract Addresses (CREATE2 deterministic — same on all EVM chains)
+- ERC-6538 Registry: `0x6538E6bf4B0eBd30A8Ea093027Ac2422ce5d6538`
+- ERC-5564 Announcer: `0x55649E01B5Df198D18D95b5cc5051630cfD45564`
+- USDC (Linea Sepolia): TBD — needs lookup
+- USDC (Linea Mainnet): `0x176211869cA2b568f2A7D4EE941E073a821EE1ff`
 
 ## Environment Variables
 - PRIVATE_KEY — deployer wallet private key

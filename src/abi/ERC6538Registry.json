@@ -1,0 +1,63 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "registrant", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "schemeId", "type": "uint256" },
+      { "indexed": false, "internalType": "bytes", "name": "stealthMetaAddress", "type": "bytes" }
+    ],
+    "name": "KeysRegistered",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "registrant", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "schemeId", "type": "uint256" }
+    ],
+    "name": "KeysUnregistered",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "", "type": "address" },
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "name": "stealthMetaAddress",
+    "outputs": [
+      { "internalType": "bytes", "name": "", "type": "bytes" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "schemeId", "type": "uint256" },
+      { "internalType": "bytes", "name": "_stealthMetaAddress", "type": "bytes" }
+    ],
+    "name": "registerKeys",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "registrant", "type": "address" },
+      { "internalType": "uint256", "name": "schemeId", "type": "uint256" },
+      { "internalType": "bytes", "name": "_stealthMetaAddress", "type": "bytes" }
+    ],
+    "name": "registerKeysFor",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "schemeId", "type": "uint256" }
+    ],
+    "name": "unregisterKeys",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

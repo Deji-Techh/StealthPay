@@ -11,8 +11,8 @@
 
 ### Smart Contracts
 - Hardhat
-- ERC-5564 Announcer (existing contract, deploy to Linea Sepolia)
-- ERC-6538 StealthMetaAddressRegistry (existing contract, deploy to Linea Sepolia)
+- ERC-5564 Announcer (CREATE2 deployed on all EVM chains, no deploy needed)
+- ERC-6538 StealthMetaAddressRegistry (CREATE2 deployed on all EVM chains, no deploy needed)
 
 ### Chain
 - Linea Sepolia testnet (chainId: 59141)
