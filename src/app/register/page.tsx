@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { ChromeNav } from '@/components/ChromeNav';
 import { GlassCard } from '@/components/GlassCard';
 import { ChromeButton } from '@/components/ChromeButton';
@@ -10,6 +10,7 @@ import {
   generateStealthMetaAddressFromKeys,
 } from '@scopelift/stealth-address-sdk/dist/utils/helpers';
 import { VALID_SCHEME_ID } from '@scopelift/stealth-address-sdk/dist/utils/crypto/types';
+import { NETWORKS, SCHEME_ID } from '@/lib/constants';
 import type { Hex } from 'viem';
 
 type Step = 'connect' | 'generate' | 'preview' | 'register' | 'success';
@@ -18,6 +19,7 @@ export default function RegisterPage() {
   const [step, setStep] = useState<Step>('connect');
   const [walletConnected, setWalletConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState('');
+  const [chainId, setChainId] = useState<number>(59141);
   const [keys, setKeys] = useState<{
     spendingPrivateKey: Hex;
     viewingPrivateKey: Hex;
@@ -28,6 +30,56 @@ export default function RegisterPage() {
   const [isRegistering, setIsRegistering] = useState(false);
   const [txHash, setTxHash] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const network = NETWORKS[chainId === 59144 ? 'mainnet' : 'sepolia'];
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.ethereum) return;
+
+    const handleChainChanged = (newChainId: string) => setChainId(parseInt(newChainId, 16));
+    const handleAccountsChanged = (accounts: string[]) => {
+      if (accounts.length > 0) {
+        setWalletAddress(accounts[0]);
+        setWalletConnected(true);
+      } else {
+        setWalletConnected(false);
+      }
+    };
+
+    window.ethereum.on('chainChanged', handleChainChanged);
+    window.ethereum.on('accountsChanged', handleAccountsChanged);
+
+    return () => {
+      window.ethereum!.removeListener('chainChanged', handleChainChanged);
+      window.ethereum!.removeListener('accountsChanged', handleAccountsChanged);
+    };
+  }, []);
+
+  const switchNetwork = useCallback(async (targetChainId: number) => {
+    if (typeof window === 'undefined' || !window.ethereum) return;
+    try {
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: `0x${targetChainId.toString(16)}` }],
+      });
+      setChainId(targetChainId);
+    } catch (switchError: any) {
+      if (switchError.code === 4902) {
+        const targetNetwork = targetChainId === 59144 ? NETWORKS.mainnet : NETWORKS.sepolia;
+        await window.ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [{
+            chainId: `0x${targetChainId.toString(16)}`,
+            chainName: targetNetwork.name,
+            rpcUrls: [targetNetwork.rpcUrl],
+            nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+            blockExplorerUrls: [targetNetwork.explorerUrl],
+          }],
+        });
+        setChainId(targetChainId);
+      }
+    }
+  }, []);
 
   const connectWallet = useCallback(async () => {
     if (typeof window === 'undefined' || !window.ethereum) {
@@ -80,7 +132,7 @@ export default function RegisterPage() {
         throw new Error('No wallet detected');
       }
 
-      const registryAddress = process.env.NEXT_PUBLIC_REGISTRY_ADDRESS || '0x6538E6bf4B0eBd30A8Ea093027Ac2422ce5d6538';
+      const registryAddress = network.registry;
 
       const txHash = await window.ethereum.request({
         method: 'eth_sendTransaction',
@@ -122,7 +174,7 @@ export default function RegisterPage() {
 
       <main className="relative z-10 max-w-3xl mx-auto px-6 pt-32 pb-20">
         {/* Page header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-12">
           <span className="font-['Sora'] text-[10px] font-medium tracking-[0.3em] uppercase text-white/25">
             ERC-6538 REGISTRY
           </span>
@@ -132,6 +184,35 @@ export default function RegisterPage() {
           <p className="mt-4 font-['Sora'] text-sm font-light text-white/35 max-w-md mx-auto">
             One-time setup. Publishes your public keys so anyone can send you private payments.
           </p>
+        </div>
+
+        {/* Network selector */}
+        <div className="flex items-center justify-center gap-3 mb-8">
+          <button
+            onClick={() => switchNetwork(59141)}
+            className={`
+              px-4 py-2 rounded-lg font-['Sora'] text-xs tracking-wider transition-all duration-300
+              ${chainId === 59141
+                ? 'bg-white/10 text-white border border-white/20'
+                : 'text-white/30 hover:text-white/50 border border-transparent'
+              }
+            `}
+          >
+            TESTNET
+          </button>
+          <button
+            onClick={() => switchNetwork(59144)}
+            className={`
+              px-4 py-2 rounded-lg font-['Sora'] text-xs tracking-wider transition-all duration-300 flex items-center gap-2
+              ${chainId === 59144
+                ? 'bg-white/10 text-white border border-white/20'
+                : 'text-white/30 hover:text-white/50 border border-transparent'
+              }
+            `}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/60" />
+            MAINNET
+          </button>
         </div>
 
         {/* Progress bar */}
@@ -402,7 +483,7 @@ export default function RegisterPage() {
                 {txHash && (
                   <div className="mb-8">
                     <a
-                      href={`https://sepolia.lineascan.build/tx/${txHash}`}
+                      href={`${network.explorerUrl}/tx/${txHash}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="
@@ -414,7 +495,7 @@ export default function RegisterPage() {
                         pb-0.5
                       "
                     >
-                      View transaction on LineaScan
+                      View transaction on Explorer
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                         <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
                         <polyline points="15,3 21,3 21,9" />
@@ -453,25 +534,9 @@ export default function RegisterPage() {
 }
 
 function encodeRegisterKeys(metaAddress: Hex): string {
-  const registryABI = [
-    {
-      inputs: [
-        { internalType: 'uint256', name: 'schemeId', type: 'uint256' },
-        { internalType: 'bytes', name: '_stealthMetaAddress', type: 'bytes' },
-      ],
-      name: 'registerKeys',
-      outputs: [],
-      stateMutability: 'nonpayable',
-      type: 'function',
-    },
-  ];
-
   const metaAddressBytes = metaAddress.startsWith('0x') ? metaAddress.slice(2) : metaAddress;
-
   const schemeId = '0000000000000000000000000000000000000000000000000000000000000001';
-
   const metaAddressLength = (metaAddressBytes.length / 2).toString(16).padStart(64, '0');
-
   const paddedMetaAddress = metaAddressBytes.padEnd(Math.ceil(metaAddressBytes.length / 64) * 64, '0');
 
   return `0x` +

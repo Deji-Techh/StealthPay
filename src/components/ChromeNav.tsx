@@ -14,9 +14,9 @@ export function ChromeNav() {
   }, []);
 
   const navLinks = [
-    { label: 'Register', href: '/register' },
     { label: 'Send', href: '/send' },
     { label: 'Inbox', href: '/inbox' },
+    { label: 'Register', href: '/register' },
   ];
 
   return (

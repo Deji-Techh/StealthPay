@@ -14,7 +14,7 @@ import {
   type Address,
   bytesToHex,
 } from "viem";
-import { ADDRESSES, SCHEME_ID } from "./constants";
+import { NETWORKS, SCHEME_ID } from "./constants";
 
 export type StealthKeyPair = {
   spendingPrivateKey: Hex;
@@ -47,17 +47,22 @@ export type MatchedAnnouncement = AnnouncementLog & {
   stealthPrivateKey: Hex;
 };
 
-const CHAIN_ID_MAP: Record<number, string> = {
+const CHAIN_ID_MAP: Record<number, keyof typeof NETWORKS> = {
   59141: "sepolia",
-  59144: "linea",
+  59144: "mainnet",
 };
+
+export function getNetworkConfig(chainId: number) {
+  const key = CHAIN_ID_MAP[chainId] ?? "sepolia";
+  return NETWORKS[key];
+}
 
 export function buildStealthMetaAddressURI(
   chainId: number,
   metaAddressBytes: Hex
 ): string {
-  const chain = CHAIN_ID_MAP[chainId] ?? String(chainId);
-  return `st:${chain}:${metaAddressBytes}`;
+  const config = getNetworkConfig(chainId);
+  return `st:${config.name.toLowerCase().replace(" ", "")}:${metaAddressBytes}`;
 }
 
 export function deriveKeysFromSignature(
@@ -89,7 +94,7 @@ export function createStealthMetaAddress(
   };
 }
 
-export function generateStealthAddress(
+export function generateStealthAddressFromMeta(
   chainId: number,
   stealthMetaAddress: Hex
 ): GeneratedStealthAddress {
@@ -106,7 +111,7 @@ export function generateStealthAddress(
   };
 }
 
-export function computeStealthKey(
+export function computeStealthKeyFromAnnouncement(
   ephemeralPublicKey: Hex,
   spendingPrivateKey: Hex,
   viewingPrivateKey: Hex
@@ -161,7 +166,7 @@ export function scanAnnouncements(
   const matched: MatchedAnnouncement[] = [];
 
   for (const announcement of announcements) {
-    const viewTag = extractViewTag(announcement.metadata);
+    const viewTag = (announcement.metadata.slice(0, 4) as Hex) || "0x00";
     const isMatch = sdkCheckStealthAddress({
       ephemeralPublicKey: announcement.ephemeralPubKey as unknown as HexString,
       spendingPublicKey: spendingPublicKey as unknown as HexString,
@@ -189,11 +194,7 @@ export function scanAnnouncements(
   return matched;
 }
 
-function extractViewTag(metadata: Hex): Hex {
-  return (metadata.slice(0, 4) as Hex) || "0x00";
-}
-
 export { VALID_SCHEME_ID, ERC5564_CONTRACT_ADDRESS };
 
 export const ANNOUNCER_ADDRESS = ERC5564_CONTRACT_ADDRESS as Address;
-export const REGISTRY_ADDRESS = ADDRESSES.lineaSepolia.registry as Address;
+export const REGISTRY_ADDRESS = NETWORKS.sepolia.registry as Address;

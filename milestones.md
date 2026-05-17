@@ -29,28 +29,28 @@
 - [x] Persist stealth keypair securely in sessionStorage
 
 ## Phase 5 — Send flow
-- [ ] Build /send page — input field for recipient address or ENS name
-- [ ] Lookup recipient's meta-address from ERC-6538 registry
-- [ ] Call generateStealthAddress() → produce one-time stealth address
-- [ ] Call USDC.transfer(stealthAddress, amount)
-- [ ] Call Announcer.announce(ephemeralPubKey, stealthAddress, viewTag)
-- [ ] Show success state with Linea explorer link
-- [ ] Generate shareable payment link: /pay/[stealthMetaAddress]
+- [x] Build /send page — input field for recipient address or ENS name
+- [x] Lookup recipient's meta-address from ERC-6538 registry
+- [x] Call generateStealthAddress() → produce one-time stealth address
+- [x] Call USDC.transfer(stealthAddress, amount)
+- [x] Call Announcer.announce(ephemeralPubKey, stealthAddress, viewTag)
+- [x] Show success state with Linea explorer link
+- [x] Generate shareable payment link: /pay/[stealthMetaAddress]
 
 ## Phase 6 — Receive flow
-- [ ] Build /inbox page — fetch last 10,000 blocks of Announcer logs
-- [ ] Run scanAnnouncements() client-side against fetched logs
-- [ ] Display matched stealth addresses with USDC balance
-- [ ] Withdraw button — sign transfer from derived stealth private key
-- [ ] Handle gas requirement — show warning if stealth address has no ETH
+- [x] Build /inbox page — fetch last 10,000 blocks of Announcer logs
+- [x] Run scanAnnouncements() client-side against fetched logs
+- [x] Display matched stealth addresses with USDC balance
+- [x] Withdraw button — sign transfer from derived stealth private key
+- [x] Handle gas requirement — show warning if stealth address has no ETH
 - [ ] Show empty state and loading skeleton while scanning
 
 ## Phase 7 — UX polish
-- [ ] Mobile responsive layout — all pages work on 375px viewport
-- [ ] Toast notifications for tx pending, success, and error states
-- [ ] QR code display for shareable payment link
-- [ ] Copy-to-clipboard for stealth meta-address and payment link
-- [ ] Landing page with 3-step explainer
+- [x] Mobile responsive layout — all pages work on 375px viewport
+- [x] Toast notifications for tx pending, success, and error states
+- [x] QR code display for shareable payment link
+- [x] Copy-to-clipboard for stealth meta-address and payment link
+- [x] Landing page with 3-step explainer
 
 ## Phase 8 — End-to-end testing
 - [ ] Full send → scan → withdraw flow on Linea Sepolia with two wallets
