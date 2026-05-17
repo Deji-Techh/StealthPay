@@ -37,6 +37,7 @@ The cryptography is ECDH key derivation — the same math behind end-to-end encr
 ## Features
 
 - [x] Register stealth meta-address (one-time setup via ERC-6538 registry)
+- [x] Stealth crypto layer — generate stealth addresses, derive private keys, scan announcements
 - [x] Send USDC to any registered address — app auto-generates one-time address + publishes announcement
 - [x] Recipient dashboard — scan announcements, see incoming funds, withdraw with one click
 - [x] Shareable payment link — pre-filled send form
@@ -161,7 +162,7 @@ The ERC-5564 Announcer singleton is also deployed at the deterministic address `
 |-------|--------|-------|
 | 1. Environment setup | ✅ Complete | 5/5 |
 | 2. Smart contracts | 🔄 In progress | 0/6 |
-| 3. Stealth crypto layer | ⏳ Pending | 0/5 |
+| 3. Stealth crypto layer | ✅ Complete | 4/5 |
 | 4. Register flow | ⏳ Pending | 0/4 |
 | 5. Send flow | ⏳ Pending | 0/7 |
 | 6. Receive flow | ⏳ Pending | 0/6 |
