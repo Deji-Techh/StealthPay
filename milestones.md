@@ -23,10 +23,10 @@
 - [ ] Confirm round-trip: generate → announce → scan → derive key → check balance (needs on-chain tx)
 
 ## Phase 4 — Register flow
-- [ ] Build /register page — wallet connect, generate stealth meta-address
-- [ ] Call ERC-6538 registerKeys() with generated meta-address on-chain
-- [ ] Show confirmation + display user's public stealth address for sharing
-- [ ] Persist stealth keypair securely in sessionStorage
+- [x] Build /register page — wallet connect, generate stealth meta-address
+- [x] Call ERC-6538 registerKeys() with generated meta-address on-chain
+- [x] Show confirmation + display user's public stealth address for sharing
+- [x] Persist stealth keypair securely in sessionStorage
 
 ## Phase 5 — Send flow
 - [ ] Build /send page — input field for recipient address or ENS name
